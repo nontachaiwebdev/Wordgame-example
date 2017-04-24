@@ -9,25 +9,33 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.moveCard = this.moveCard.bind(this);
+    this.checkResult = this.checkResult.bind(this);
+    this.result = ['F','A','M','I','L','Y'];
     this.state = {
       cards : [{
         id: 1,
-	word: 'F'
+	word: 'F',
+        checker: false
       }, {
 	id: 2,
- 	word: 'A'
+ 	word: 'A',
+	checker: false
       }, {
 	id: 3,
-	word: 'M'
+	word: 'M',
+	checker: false
       }, {
 	id: 4,
-	word: 'I'
+	word: 'I',
+	checker: false
       }, {
 	id: 5,
-	word: 'L'
+	word: 'L',
+	checker: false
       }, {
 	id: 6,
-	word: 'Y'
+	word: 'Y',
+	checker: false
       }]
     }
   }
@@ -44,10 +52,36 @@ class App extends Component {
       }
     }));
   }
+
+  checkResult() {
+    let stringCard = '';
+    this.state.cards.map((object, i) => {
+      if( object.word === this.result[i] ) {
+	const updateObject = update(this.state.cards[i],{checker: {$set: true} });
+	console.log(updateObject);
+	const newObject = update(this.state.cards, {
+          $splice: [[i, 1, updateObject]]
+    	});
+	this.setState({cards: newObject});
+      }
+      else {
+        const updateObject = update(this.state.cards[i],{checker: {$set: false} });
+	console.log(updateObject);
+	const newObject = update(this.state.cards, {
+          $splice: [[i, 1, updateObject]]
+    	});
+	this.setState({cards: newObject});
+      }
+      stringCard += object.word;
+    });
+    if( stringCard === this.result.join("") )
+    console.log('Finish');
+  }
+
   render() {
     const { cards } = this.state; 
     return (
-      <div className="App">
+      <div className="App" ref='container' >
         {cards.map((card, i)=> (
 	  <Card
 	    key={card.id}
@@ -55,6 +89,8 @@ class App extends Component {
 	    id={card.id}
 	    text={card.word}
 	    moveCard={this.moveCard}
+	    checkResult={this.checkResult}
+	    checker={card.checker}
 	  />
 	))}
       </div>

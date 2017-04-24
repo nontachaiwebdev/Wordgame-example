@@ -12,41 +12,33 @@ const cardSource = {
       id: props.id,
       index: props.index
     }
+  },
+  endDrag(props, monitor, component){
+    console.log('End Drag');
+    console.log(props);
+    props.checkResult();
   }
 };
 
 const cardTarget = {
   hover(props, monitor, component){
-    //console.log(props);
-    //console.log(monitor);
-    //console.log(component);
     const dragIndex = monitor.getItem().index;
-    console.log('DragIndex');
-    console.log(dragIndex);
     const hoverIndex = props.index;
-    console.log('HoverIndex');
-    console.log(hoverIndex);
     if(dragIndex === hoverIndex) {
       return;
     }
-    /* const hoverBoundingRect = findDOMNode(component).getBoundingClientRect();
-    const hoverMiddleX = (hoverBoundingRect.right - hoverBoundingRect.left) / 2;
-    console.log('hoverMiddleX');
-    console.log(hoverMiddleX);
-    const clientOffset = monitor.getClientOffset();
-    const hoverClientX = clientOffset.x - hoverBoundingRect.right;
-    console.log('hoverClientX');
-    console.log(hoverClientX); */
     props.moveCard(dragIndex, hoverIndex);
     monitor.getItem().index = hoverIndex;
   }
 }
 
 class Card extends Component {
-    render() {
+  render() {
+    const { checker } = this.props;
     const { isDragging, connectDragSource, connectDropTarget } = this.props;
+    const correctStyle = checker ? { 'background' : "#2ecc71", "color" : "#fff"  } : {};
     return connectDragSource(connectDropTarget(
-      <div className='card'>
+      <div className='card' style={ correctStyle } >
         { this.props.text }
       </div>
     ));
@@ -60,6 +52,7 @@ Card.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   id: PropTypes.any.isRequired,
   text: PropTypes.string.isRequired,
+  checker: PropTypes.bool.isRequire
 }
 
 function collect1(connect, monitor){
