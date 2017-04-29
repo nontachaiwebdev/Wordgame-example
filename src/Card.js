@@ -8,14 +8,13 @@ import './App.css';
 
 const cardSource = {
   beginDrag(props){
+    props.startDrag(props.index);
     return {
       id: props.id,
-      index: props.index
+      index: props.index, 
     }
   },
   endDrag(props, monitor, component){
-    console.log('End Drag');
-    console.log(props);
     props.checkResult();
   }
 };
@@ -24,11 +23,11 @@ const cardTarget = {
   hover(props, monitor, component){
     const dragIndex = monitor.getItem().index;
     const hoverIndex = props.index;
-    if(dragIndex === hoverIndex) {
+    /* if(dragIndex === hoverIndex) {
       return;
-    }
+    } */
     props.moveCard(dragIndex, hoverIndex);
-    monitor.getItem().index = hoverIndex;
+    //monitor.getItem().index = hoverIndex;
   }
 }
 
@@ -52,7 +51,8 @@ Card.propTypes = {
   isDragging: PropTypes.bool.isRequired,
   id: PropTypes.any.isRequired,
   text: PropTypes.string.isRequired,
-  checker: PropTypes.bool.isRequire
+  checker: PropTypes.bool.isRequire,
+  startDrag: PropTypes.func.isRequire
 }
 
 function collect1(connect, monitor){

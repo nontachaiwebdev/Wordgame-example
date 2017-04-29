@@ -8,9 +8,12 @@ import './App.css';
 class App extends Component {
   constructor(props) {
     super(props);
+    this.startDrag = this.startDrag.bind(this);
     this.moveCard = this.moveCard.bind(this);
     this.checkResult = this.checkResult.bind(this);
+    this.nowHoverIndex = 0;
     this.result = ['F','A','M','I','L','Y'];
+    this.cloneCards = []
     this.state = {
       cards : [{
         id: 1,
@@ -39,26 +42,34 @@ class App extends Component {
       }]
     }
   }
-  moveCard(dragIndex, hoverIndex) {
-    const { cards } = this.state;
-    const dragCard = cards[dragIndex];
 
-    this.setState(update(this.state, {
-      cards : {
-        $splice: [
-	  [dragIndex, 1],
-	  [hoverIndex, 0 , dragCard]
-	]
-      }
-    }));
+  swapElementArray(arrayInput, a, b){
+    const array = arrayInput.slice();
+    const block = array[a];
+    array[a] = array[b];
+    array[b] = block;
+    return array;
+  }
+
+  startDrag(index){
+    this.nowHoverIndex = index
+    this.cloneCards = this.state.cards
+  }
+
+  moveCard(dragIndex, hoverIndex) {
+    if( hoverIndex != this.nowHoverIndex ){
+      this.nowHoverIndex = hoverIndex
+      this.setState({cards: this.swapElementArray(this.cloneCards, dragIndex, hoverIndex)});
+    }
   }
 
   checkResult() {
+    console.log(`End Drag`);
     let stringCard = '';
+    this.cloneCards = this.state.cards;
     this.state.cards.map((object, i) => {
       if( object.word === this.result[i] ) {
 	const updateObject = update(this.state.cards[i],{checker: {$set: true} });
-	console.log(updateObject);
 	const newObject = update(this.state.cards, {
           $splice: [[i, 1, updateObject]]
     	});
@@ -66,7 +77,7 @@ class App extends Component {
       }
       else {
         const updateObject = update(this.state.cards[i],{checker: {$set: false} });
-	console.log(updateObject);
+
 	const newObject = update(this.state.cards, {
           $splice: [[i, 1, updateObject]]
     	});
@@ -74,8 +85,10 @@ class App extends Component {
       }
       stringCard += object.word;
     });
-    if( stringCard === this.result.join("") )
-    console.log('Finish');
+    if( stringCard === this.result.join("") ){
+    
+    }
+    this.cloneCards = this.state.cards
   }
 
   render() {
@@ -91,6 +104,7 @@ class App extends Component {
 	    moveCard={this.moveCard}
 	    checkResult={this.checkResult}
 	    checker={card.checker}
+	    startDrag={this.startDrag}
 	  />
 	))}
       </div>
