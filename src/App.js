@@ -1,20 +1,13 @@
-import React, { Component } from 'react';
-import { createStore } from 'redux';
-import { Provider } from 'react-redux';
-import AppContainer from './container'
-import cardReducer from './reducer'
+import React from 'react'
+import { Provider } from 'react-redux'
+import Cards from './Cards'
+import store from './store'
+import './css/App.css'
 
-const store = createStore(cardReducer);
+const App = () => (
+  <Provider store={store}>
+    <Cards word="father" />
+  </Provider>
+)
 
-class App extends Component {
- 
-  render() {
-    return (
-      <Provider store={store} >
-        <AppContainer />  
-      </Provider>
-    );
-  }
-}
-
-export default App;
+export default App

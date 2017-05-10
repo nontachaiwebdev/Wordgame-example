@@ -1,0 +1,38 @@
+root: true
+parser: babel-eslint
+extends: airbnb
+rules:
+    func-names: 0
+    semi: [2, never]
+    no-unexpected-multiline: 2
+    no-shadow: 1
+    max-len: 1
+
+    import/extensions: 0
+    import/imports-first: 2
+    import/no-commonjs: 2
+    import/no-duplicates: 2
+    import/no-extraneous-dependencies: 0
+    import/no-named-as-default-member: 1
+    import/no-named-as-default: 1
+    import/no-unresolved: 0
+
+    react/display-name: 1
+    react/forbid-component-props: [2, {forbid: [], forbidPatterns: ['data-*'], ignoreDomNodes: false}]
+    react/jsx-filename-extension: 0 # https://github.com/airbnb/javascript/blob/master/packages/eslint-config-airbnb/rules/react.js#L226
+    react/jsx-key: 2
+    react/jsx-no-duplicate-props: 2
+    react/no-string-refs: 2
+    react/no-unescaped-entities: 0 # very unlikely to cause issues, very annoying to have on.
+env:
+    phantomjs: true
+    jasmine: true
+plugins:
+    - import
+    # - flowtype
+settings:
+    import/ignore:
+        - node_modules
+        - \.coffee$
+        - \.(scss|less|css)$
+    import/resolver: webpack
